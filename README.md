@@ -14,6 +14,13 @@ A set of scripts (two currently) that allows recurring subscriptions. The payer 
 
 TODO: The payer may deposit into an Aave or Curve wallet for yield farming.
 
+## Install and Usage
+
+```
+$ npm install
+$ npx truffle migrate
+```
+
 ## License
 
 `MIT`. Please refer to the `LICENSE` file. All these smart contracts are unaudited and were intended as a learning exercise. Please exercise due diligence before you use them.
