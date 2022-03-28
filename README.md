@@ -14,11 +14,15 @@ A set of scripts (two currently) that allows recurring subscriptions. The payer 
 
 TODO: The payer may deposit into an Aave or Curve wallet for yield farming.
 
+### Betting
+
+A 'binary' (supports two options only) betting that rewards based on how early they get in and how much they bet.
+
 ## Install and Usage
 
 ```
 $ npm install
-$ npx truffle migrate
+$ npx hardhat build
 ```
 
 ## License
