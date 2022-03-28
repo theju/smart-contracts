@@ -7,12 +7,12 @@ contract Auction {
         address bidder;
         uint256 bid;
     }
-    
+
     event BidReceived(Bid bid);
     event ReservePriceChanged(uint256 price);
-    
+
     address private owner;
-    address private platform = ''; // TODO: Fill up platform's address
+    address private platform; // NOTE: Set the value here before deploy else platform commission will get burnt
     uint8 private commission = 5;
     bool private ended;
     uint256 private reservePrice;
@@ -26,7 +26,17 @@ contract Auction {
         reservePrice = _reservePrice;
         endTime = block.timestamp + _endTime;
     }
-    
+
+    function setPlatform(address _addr) public {
+        require(msg.sender == platform, "Only platform may call this method");
+        platform = _addr;
+    }
+
+    function setFees(uint8 _commission) public {
+        require(msg.sender == platform, "Only platform may call this method");
+        commission = _commission;
+    }
+
     function bid() public payable {
         require(msg.sender != owner, "Owner cannot bid");
         require(msg.value > reservePrice, "Bid must be larger than reserve price");
@@ -36,7 +46,7 @@ contract Auction {
         balances[highestBid.bidder] += highestBid.bid;
         Bid memory bb = Bid({time: block.timestamp, bidder: msg.sender, bid: msg.value});
         highestBid = bb;
-        
+
         emit BidReceived(highestBid);
     }
 
@@ -48,7 +58,7 @@ contract Auction {
 
         emit ReservePriceChanged(reservePrice);
     }
-    
+
     function refund() public returns (bool) {
         require(balances[msg.sender] > 0, "No balance for user");
         uint256 value = balances[msg.sender];
@@ -59,7 +69,7 @@ contract Auction {
         }
         return true;
     }
-    
+
     function claim() public {
         require(msg.sender == owner || msg.sender == platform, "Only owner or platform can withdraw");
         require(block.timestamp > endTime, "Auction still ongoing");
